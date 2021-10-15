@@ -1,13 +1,109 @@
-body {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing:border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+.splash {
+  height:100vh;
+  width:100%;
+  background-color:rgb(255, 255, 255);
+  padding:30px;
+}
+
+.search-input {
+  width:80%;
+  outline:none ;
+}
+
+.search-button {
+  width:20%;
+}
+
+.article-card  {
+  height:250px;
+  overflow:hidden;
+  position:relative;
+}
+
+.article-card-img {
+  position:absolute;
+  min-width:100%;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:2;
+}
+
+.article-card-title {
+  height:auto;
+  margin-top:-100px;
+  z-index:3;
+  position:absolute;
+  bottom:10%;
+  left:5%;
+}
+
+.article-card-preview {
+  overflow: hidden;
+  height:70px;
+}
+.truncate {
+  width: 250px;
+  max-width:100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+}
+
+#loader {
+  animation: animate 1.5s linear infinite;
+  clip: rect(0, 80px, 80px, 40px); 
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  left: calc(50% - 40px);
+  top: calc(50% - 40px);
+}
+@keyframes animate {
+  0% { 
+    transform: rotate(0deg)
+  }
+  100% { 
+    transform: rotate(220deg)
+  }
+}
+#loader:after {
+  animation: animate2 1.5s ease-in-out infinite;
+  clip: rect(0, 80px, 80px, 40px);
+  content:'';
+  border-radius: 50%; 
+  height: 80px;
+  width: 80px;
+  position: absolute; 
+} 
+@keyframes animate2 {
+  0% {
+    box-shadow: inset rgb(33, 33, 33) 0 0 0 17px;
+    transform: rotate(-140deg);
+  }
+  50% {
+    box-shadow: inset rgb(17, 17, 17) 0 0 0 2px;
+  }
+  100% {
+    box-shadow: inset rgb(107, 107, 107) 0 0 0 17px;
+    transform: rotate(140deg);
+  }
 }
