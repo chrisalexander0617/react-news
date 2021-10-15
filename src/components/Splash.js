@@ -4,7 +4,8 @@ import axios from 'axios';
 import Search from './Search';
 import Feed from './Feed';
 import LoadBox from './LoadBox';
-import ArticleCard from './ArticleCard'
+import ArticleCard from './ArticleCard';
+import StatusCard from './StatusCard';
 
 class Splash extends Component {
     constructor(){
@@ -13,7 +14,8 @@ class Splash extends Component {
             isLoaded:null,
             articles:null,
             query:'',
-            time:null
+            time:null,
+            serverStatus:null
         }
 
         this.search = this.search.bind(this);
@@ -23,6 +25,10 @@ class Splash extends Component {
     }
 
     componentDidMount(){
+        axios.get('http://localhost:8080/')
+        .then(res =>{
+            this.setState({serverStatus:'Connected' });
+        })
         this.tick();
     }
 
@@ -38,9 +44,12 @@ class Splash extends Component {
             if(hours > 12 ) {
                 hours = hours - 12
                 meridiem = 'pm'
-            } else {
+            } 
+            
+            else {
                 meridiem = 'am'
             }
+            
             if(hours < 10) hours = '0' + hours;
             if(seconds < 10) seconds = '0' + seconds;
             if(minutes < 10) minutes = '0' + minutes;
@@ -76,9 +85,9 @@ class Splash extends Component {
         var data = { data:this.state.query }
         axios
         .get('http://localhost:8080/search/', { params:data} )
-        .then(data => {
+        .then(res => {
             this.setState({
-                articles:data.data[0].articles,
+                articles:res.data[0].articles,
                 isLoaded:true
             })
         })
@@ -89,14 +98,13 @@ class Splash extends Component {
 
     render(){
         var articleCards = [];
-        
         if(this.state.articles){
 
             this.state.articles.forEach((article, i) =>{
                 if(i >= 9) return;
 
                 if(article.media == null){
-                    console.log('no image')
+                    return
                 } 
                 
                 else {
@@ -117,6 +125,9 @@ class Splash extends Component {
         return (
             <>
                 <div className="splash">
+                    { 
+                        this.state.serverStatus && <StatusCard status={this.state.serverStatus} />
+                    }
                     <div className="container mb-10 mx-auto">
 
                         <div className="flex justify-between">

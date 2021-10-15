@@ -11,6 +11,10 @@ console.log(process.env.REACT_APP_APP_NAME)
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (rq, rs) => {
+    rs.status(200).json([ {message:'Success'} ])
+})
+
 app.get('/search', (rq, rs) => {
 
     var options = {
