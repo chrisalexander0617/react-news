@@ -41,3 +41,5 @@ app.get('/search', (rq, rs) => {
 app.listen(8080, () => {
     console.log('app listening')
 });
+
+module.exports = app
