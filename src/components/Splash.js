@@ -27,7 +27,12 @@ class Splash extends Component {
     componentDidMount(){
         axios.get('http://localhost:8080/')
         .then(res =>{
-            this.setState({serverStatus:'Connected' });
+            if(res.status === 200)
+                this.setState({serverStatus:'Connected' });
+        })
+        .catch(err => {
+            console.log(err.message)
+            this.setState({serverStatus:err.message})
         })
         this.tick();
     }
@@ -49,7 +54,7 @@ class Splash extends Component {
             else {
                 meridiem = 'am'
             }
-            
+
             if(hours < 10) hours = '0' + hours;
             if(seconds < 10) seconds = '0' + seconds;
             if(minutes < 10) minutes = '0' + minutes;
