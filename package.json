@@ -10,6 +10,7 @@
     "axios": "^0.23.0",
     "concurrently": "^6.3.0",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -17,8 +18,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-
-    "startt": "concurrently \"craco start\" \"cd server && node index\" ", 
+    "startt": "concurrently \"craco start\" \"cd server && node index\" ",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",

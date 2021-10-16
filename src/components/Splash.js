@@ -7,6 +7,8 @@ import LoadBox from './LoadBox';
 import ArticleCard from './ArticleCard';
 import StatusCard from './StatusCard';
 
+require('dotenv').config();
+
 class Splash extends Component {
     constructor(){
         super();
@@ -21,23 +23,25 @@ class Splash extends Component {
         this.search = this.search.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
-        this.tick = this.tick.bind(this)
+        this.tick = this.tick.bind(this);
+        this.fetchArticles = this.fetchArticles.bind(this)
     }
 
     componentDidMount(){
-        axios.get('http://localhost:8080/')
-        .then(res =>{
-            if(res.status === 200)
-                this.setState({serverStatus:'Connected' });
-        })
-        .catch(err => {
-            console.log(err.message)
-            this.setState({serverStatus:err.message})
-        })
         this.tick();
     }
+   
+    handleKeyPress(e) {
+        if(e.key === 'Enter')
+            this.fetchArticles(this.state.query);
+        else 
+            return;
+    }
 
-    
+    search(){
+        this.fetchArticles(this.state.query);
+    }
+
     tick(){
         setInterval(() => {
             var hours = new Date().getHours();
@@ -45,58 +49,47 @@ class Splash extends Component {
             var seconds = new Date().getSeconds();
 
             var meridiem;
-    
+
             if(hours > 12 ) {
                 hours = hours - 12
                 meridiem = 'pm'
             } 
             
-            else {
+            else
                 meridiem = 'am'
-            }
-
+          
             if(hours < 10) hours = '0' + hours;
             if(seconds < 10) seconds = '0' + seconds;
             if(minutes < 10) minutes = '0' + minutes;
             
             var timeFormatted =  hours + ":" + minutes + " " + meridiem
             this.setState({ time:timeFormatted });
-
         }, 1000)
     }
-    
-    handleKeyPress(e) {
-        if(e.key === 'Enter'){
-            this.setState({isLoaded:false });
 
-            var data = {
-                data:this.state.query
-            };
-
-            axios
-            .get('http://localhost:8080/search/', { params:data} )
-            .then(data => {
-                this.setState({
-                    articles:data.data[0].articles,
-                    isLoaded:true
-                })
-            })
-            .catch(err => console.log(err))
-        } else return;
-    }
-
-    search(){
+    fetchArticles(query){
         this.setState({isLoaded:false });
-        var data = { data:this.state.query }
-        axios
-        .get('http://localhost:8080/search/', { params:data} )
-        .then(res => {
+
+        var options = {
+            method: 'GET',
+            url: 'https://newscatcher.p.rapidapi.com/v1/search_free',
+            params: { q:query , lang: 'en', media: 'True' },
+            headers: {
+              'x-rapidapi-host': 'newscatcher.p.rapidapi.com',
+              'x-rapidapi-key':process.env.REACT_APP_NEWS_API
+            }
+        };
+
+        axios.request(options).then(data => {
             this.setState({
-                articles:res.data[0].articles,
+                articles:data.data.articles,
                 isLoaded:true
             })
         })
-        .catch(err => console.log(err))
+    
+        .catch(err => {
+            console.log(err)
+        });
     }
 
     handleTextChange = e => this.setState({query:e.target.value}) 
